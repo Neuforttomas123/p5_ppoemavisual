@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poesía Visual - Coca Cola</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Futura:wght@700&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Futura', sans-serif;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      cursor: none;
+      position: relative;
+    }
+
+    .top {
+      background-color: #E41E26;
+      color: white;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      line-height: 1.1;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bottom {
+      background-color: white;
+      color: #E41E26;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      line-height: 1.1;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .column {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+
+    .word-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .right {
+      align-self: flex-end;
+      text-align: right;
+      width: 100%;
+      display: block;
+    }
+
+    .center {
+      margin-top: 0.5rem;
+    }
+
+    /* Cursor personalizado */
+    .cursor {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      background-color: white;
+      transform: translate(-50%, -50%);
+      transition: background-color 0.25s ease, transform 0.1s ease;
+      z-index: 1000;
+    }
+
+    span {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    /* Efecto cocaine */
+    .cocaine {
+      position: relative;
+      color: #E41E26;
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+
+    .cocaine::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.15em;
+      height: 0.9em;
+      width: 0;
+      background-color: #E41E26;
+      transform-origin: left center;
+      transform: scaleX(0);
+      transition: transform 1.5s ease, opacity 0.4s ease;
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* Al pasar el cursor */
+    .cocaine:hover {
+      color: transparent;
+      opacity: 0;
+    }
+
+    .cocaine:hover::after {
+      transform: scaleX(1);
+      opacity: 1;
+      width: 100vw;
+    }
+
+    /* Cuando se quita el cursor */
+    .cocaine:not(:hover)::after {
+      transform: scaleX(0);
+      opacity: 0;
+      transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor"></div>
+
+  <div class="top">
+    <div class="column">
+      <div class="word-block">
+        <span>beba</span>
+        <span>babe</span>
+        <span>beba</span>
+        <span>babe</span>
+        <span>caco</span>
+        <span>cola</span>
+      </div>
+      <div class="word-block">
+        <span>coca cola</span>
+        <span class="right">cola</span>
+        <span>coca</span>
+        <span>cola caco</span>
+      </div>
+    </div>
+    <div class="center">
+      <span>c l o a c a</span>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="column">
+      <div class="word-block">
+        <span>drink</span>
+        <span>drool</span>
+        <span>drink</span>
+        <span>drool</span>
+        <span>shard</span>
+        <span>glue</span>
+      </div>
+      <div class="word-block">
+        <span>coca cola</span>
+        <span class="right">glue</span>
+        <span class="cocaine">coca(ine)</span>
+        <span>glue shard</span>
+      </div>
+    </div>
+    <div class="center">
+      <span>c e s s p o o l</span>
+    </div>
+  </div>
+
+  <script>
+    const cursor = document.querySelector('.cursor');
+    const spans = document.querySelectorAll('span');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.top = e.clientY + 'px';
+      cursor.style.left = e.clientX + 'px';
+
+      // Cambiar color del cursor según fondo
+      const element = document.elementFromPoint(e.clientX, e.clientY);
+      if (element && (element.closest('.top') || element.classList.contains('top'))) {
+        cursor.style.backgroundColor = 'white'; // sobre rojo
+      } else {
+        cursor.style.backgroundColor = '#E41E26'; // sobre blanco
+      }
+
+      // Movimiento de letras
+      spans.forEach(span => {
+        const rect = span.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 80) {
+          const moveX = dx * 0.08;
+          const moveY = dy * 0.08;
+          span.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        } else {
+          span.style.transform = `translate(0,0)`;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
